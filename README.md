@@ -94,13 +94,33 @@ Initial results are mostly negative: Even though conditional batchnorm can sligh
 		Best metric: 29.463068956118832 (epoch 37)
 ```
 
+### Results on Flowers 102
+
+Results on Flowers 102 show a similar negative pattern:
+
+#### End-to-end finetuning
+
+```
+1 image per class (batch size 16):
+	Resnet18:
+		Best metric: 22.94117648554783 (epoch 49)
+```
+
+#### Conditional batchnorm + fc
+
+```
+1 image per class (batch size 16):
+	Resnet18:
+		Best metric: 7.64705883100921 (epoch 40)
+```
+
 ### TODO
 
 - [x] find a suitable dataset
 - [x] add EDA notebook for visualizing the data
 - [x] modify dataset loading
 - [x] modify model loading
-- [ ] Try a harder dataset than Oxford Pets where the risk of overfitting is higher
+- [x] Try a harder dataset than Oxford Pets where the risk of overfitting is higher
 - [ ] look at the argument options for `train.py` and try to find better default baseline arguments. Maybe look at some reference implementations or papers for this. Note e.g. that lr scheduling is on by default (both upscaling and downscaling of lr)
 - [ ] make it possible to plot the results in a graph for more easily comparing different runs. E.g. there is a summary.csv file which may be useful
 

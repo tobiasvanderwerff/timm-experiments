@@ -20,28 +20,50 @@ class TorchvisionDatasetTimm(Dataset):
         return len(self._dataset)
 
 
-def create_oxford_pets_dataset(root="data", is_training=True, n_img_per_class=10):
+def create_oxford_pets_dataset(root="data", is_training=True, n_img_per_class=10, random_seed=0):
     if is_training:
         dataset = torchvision.datasets.OxfordIIITPet(root, split="trainval", download=True)
+
         # Make a subset of the training dataset with N images per class
-        dataset = create_subset(dataset, n_img_per_class=n_img_per_class, random_seed=0)
+
+        np.random.seed(random_seed)
+
+        targets = [cls for _, cls in dataset]
+
+        subset = []
+        for cls in range(len(dataset.classes)):
+            indices = np.where(np.array(targets) == cls)[0]
+            subset.extend(np.random.choice(indices, n_img_per_class, replace=False))
+
+        dataset = Subset(dataset, subset)
     else:
         dataset = torchvision.datasets.OxfordIIITPet(root, split="test")
 
     return TorchvisionDatasetTimm(dataset)
 
 
-def create_subset(dataset, n_img_per_class=10, random_seed=0):
-    np.random.seed(random_seed)
+def create_flowers102_dataset(root="data", is_training=True, n_img_per_class=10, random_seed=0):
+    if is_training:
+        dataset = torchvision.datasets.Flowers102(root, split="train", download=True)
 
-    targets = [cls for _, cls in dataset]
+        # Make a subset of the training dataset with N images per class
 
-    subset = []
-    for cls in range(len(dataset.classes)):
-        indices = np.where(np.array(targets) == cls)[0]
-        subset.extend(np.random.choice(indices, n_img_per_class, replace=False))
+        np.random.seed(random_seed)
 
-    return Subset(dataset, subset)
+        targets = [cls for _, cls in dataset]
+        classes = set(targets)
+
+        subset = []
+        for cls in classes:
+            indices = np.where(np.array(targets) == cls)[0]
+            subset.extend(np.random.choice(indices, n_img_per_class, replace=False))
+
+        dataset = Subset(dataset, subset)
+    else:
+        dataset = torchvision.datasets.Flowers102(root, split="val")
+
+    return TorchvisionDatasetTimm(dataset)
+
 
 
 """

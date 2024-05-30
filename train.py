@@ -493,8 +493,8 @@ def main():
             p.requires_grad = False
 
         # Unfreeze the final layer
-        # for param in model.fc.parameters():
-        #     param.requires_grad = True
+        for param in model.fc.parameters():
+            param.requires_grad = True
 
         # Replace batch norm layers with conditional batch norm
         from layers import ConditionalBatchNorm2d
@@ -663,10 +663,12 @@ def main():
         input_img_mode = args.input_img_mode
 
     ############### TvdW Start ###############
-    from data import create_oxford_pets_dataset
+    from data import create_oxford_pets_dataset, create_flowers102_dataset
 
-    dataset_train = create_oxford_pets_dataset(root=args.data_dir, is_training=True, n_img_per_class=1)
-    dataset_eval = create_oxford_pets_dataset(root=args.data_dir, is_training=False)
+    # dataset_train = create_oxford_pets_dataset(root=args.data_dir, is_training=True, n_img_per_class=1)
+    # dataset_eval = create_oxford_pets_dataset(root=args.data_dir, is_training=False)
+    dataset_train = create_flowers102_dataset(root=args.data_dir, is_training=True, n_img_per_class=1)
+    dataset_eval = create_flowers102_dataset(root=args.data_dir, is_training=False)
 
     print(f"Train dataset size: {len(dataset_train)}")
     print(f"Test dataset size: {len(dataset_eval)}")
